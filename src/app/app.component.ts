@@ -118,7 +118,7 @@ export class AppComponent implements OnInit {
 
   triggerSearch(): void {
     if (this.serachForm.status === 'VALID') {
-      console.log(this.serachForm.value);
+      alert(JSON.stringify(this.serachForm.value));
     } else {
       alert('El formulario no es válido');
     }
