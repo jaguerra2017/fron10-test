@@ -1,20 +1,88 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+<div class="title">
+    <h1>Busca vuelos baratos en cientos de webs de viajes</h1>
 </div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/cli">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<form [formGroup]="serachForm">
+<div class="main">
+    <div class="selectContainer">
+        <mat-select formControlName = "selectedFlightType" class="defaultSelect" required>
+            <mat-option *ngFor="let flightType of flightTypes" [value]="flightType.code">
+                {{flightType.name}}
+            </mat-option>
+          </mat-select>
+    </div>
+    <div class="selectContainer">
+        <mat-select class="defaultSelect" [placeholder]="getPassengersSearchString()" required>
+            <mat-option class="bigOption" selected disabled value="Pasajeros">
+              <div *ngFor="let passengerType of passengerTypes">
+                  <label class="customLabel">{{passengerType.name}}  {{ passengerType.ageRange }}</label>
+                  <mat-form-field style="width: 60px">
+                      <button
+                        mat-button
+                        mat-icon-button
+                        matPrefix
+                        aria-label="Remove"
+                        (click)="decreaseQuantity(passengerType)"
+                        >
+                        <mat-icon>remove</mat-icon>
+                      </button>
+                      <input matInput type="number" [value]="passengerType.quantity"/>
+                      <button
+                        mat-button
+                        mat-icon-button
+                        matSuffix
+                        aria-label="Add"
+                        (click)="increaseQuantity(passengerType)"
+                        >
+                        <mat-icon>add</mat-icon>
+                      </button>
+                    </mat-form-field>
+              </div>
+            </mat-option>
+          </mat-select>
+    </div>
+    <div class="selectContainer" [hidden]="serachForm.get('selectedFlightType').value === 'multidestino'">
+        <mat-select formControlName = "selectedFlightClass" class="defaultSelect">
+            <mat-option *ngFor="let flightClass of flightClasses" [value]="flightClass.code">
+                {{flightClass.name}}
+            </mat-option>
+          </mat-select>
+    </div>
+</div>
+<div class="main">
+   <div class="fields">
+      <mat-form-field appearance="fill" >
+          <mat-icon matPrefix>airplanemode_on</mat-icon>
+          <mat-label>Origen</mat-label>
+          <input matInput formControlName="origin" required>
+      </mat-form-field>
+   </div>
+   <div class="fields">
+    <mat-form-field appearance="fill">
+        <mat-icon matPrefix>airplanemode_on</mat-icon>
+        <mat-label>Destino</mat-label>
+        <input matInput formControlName="destination" required>
+    </mat-form-field>
+    </div>
+    <div class="fields">
+    <mat-form-field appearance="fill">
+        <input matInput formControlName="selectedGoDate" [matDatepicker]="goDate" placeholder="Fecha de ida" required>
+        <mat-datepicker-toggle matPrefix [for]="goDate"></mat-datepicker-toggle>
+        <mat-datepicker #goDate></mat-datepicker>
+    </mat-form-field>
+    </div>
+    <div class="fields" [hidden]="serachForm.get('selectedFlightType').value !== 'ida_vuelta'">
+    <mat-form-field appearance="fill">
+        <input matInput formControlName="selectedReturnDate" [matDatepicker]="returnDate" placeholder="Fecha de regreso" required>
+        <mat-datepicker-toggle matPrefix [for]="returnDate"></mat-datepicker-toggle>
+        <mat-datepicker #returnDate></mat-datepicker>
+    </mat-form-field>
+    </div>
+    <div class="search">
+        <button (click)="triggerSearch()" class="searchButton">
+            <mat-icon class="bigIcon">search</mat-icon>
+          </button>
+    </div>
+</div>
+</form>
+
 
